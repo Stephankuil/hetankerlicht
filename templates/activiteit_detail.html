@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ activiteit['titel'] }} - Details</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h1 { color: darkblue; }
+        a { text-decoration: none; color: darkgreen; }
+        .info { margin-top: 20px; }
+        .label { font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <a href="{{ url_for('activiteiten') }}">⬅️ Terug naar activiteitenoverzicht</a>
+
+    <h1>{{ activiteit['titel'] }}</h1>
+
+    <div class="info">
+        <p><span class="label">📅 Datum:</span> {{ activiteit['datum'] }}</p>
+        <p><span class="label">📝 Beschrijving:</span></p>
+        <p>{{ activiteit['beschrijving'] or 'Geen beschrijving beschikbaar.' }}</p>
+    </div>
+<form method="POST" action="{{ url_for('activiteit_verwijderen', id=activiteit['id']) }}" onsubmit="return confirm('Weet je zeker dat je deze activiteit wilt verwijderen?');">
+    <button type="submit">🗑️ Verwijderen</button>
+</form>
+
+<a href="{{ url_for('activiteit_bewerken', id=activiteit['id']) }}">
+    ✏️ Bewerken
+</a>
+
+
+</body>
+</html>

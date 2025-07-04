@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Over Het Ankerlicht</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #2c3e50;
+        }
+        p {
+            max-width: 700px;
+            margin: auto;
+            line-height: 1.6;
+            font-size: 1.1em;
+        }
+        .btn-group {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            background-color: #2c3e50;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+        }
+        .btn:hover {
+            background-color: #1a242f;
+        }
+        .hero-image {
+            margin: 30px auto;
+            max-width: 700px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welkom bij Buurtvereniging Het Ankerlicht ⚓</h1>
+
+    <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984" alt="Ankerlicht sfeerbeeld" class="hero-image">
+
+    <p>
+        Het Ankerlicht is een warme en bruisende plek waar buren elkaar ontmoeten. Of je nu mee wil doen aan een
+        dartstoernooi, wil poolen met vrienden of een gezellige avond met muziek zoekt – het kan hier allemaal!
+        <br><br>
+        Vrijwilligers organiseren activiteiten voor jong en oud. Iedereen is welkom en niets moet.
+    </p>
+
+    <div class="btn-group">
+        <a href="{{ url_for('publieke_agenda') }}" class="btn">📅 Bekijk de Agenda</a>
+        <a href="{{ url_for('lidworden') }}" class="btn">👥 Lid worden</a>
+        <a href="{{ url_for('contact') }}" class="btn">📬 Contact</a>
+        <a href="{{ url_for('fotos') }}" class="btn">📸 Foto's</a>
+    </div>
+
+</body>
+</html>

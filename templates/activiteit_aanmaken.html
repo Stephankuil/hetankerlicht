@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Nieuwe Activiteit Aanmaken</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h1 { color: darkblue; }
+        label { display: block; margin-top: 10px; }
+        input, textarea { width: 100%; padding: 8px; margin-top: 4px; }
+        button { margin-top: 15px; padding: 10px 20px; }
+        a { text-decoration: none; display: inline-block; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <h1>➕ Nieuwe Activiteit</h1>
+
+    <a href="{{ url_for('dashboard') }}">⬅️ Terug naar dashboard</a>
+
+    <form method="POST">
+        <label for="titel">Titel:</label>
+        <input type="text" name="titel" id="titel" required>
+
+        <label for="datum">Datum (YYYY-MM-DD):</label>
+        <input type="text" name="datum" id="datum" required>
+
+        <label for="beschrijving">Beschrijving:</label>
+        <textarea name="beschrijving" id="beschrijving" rows="4"></textarea>
+
+        <button type="submit">Toevoegen</button>
+    </form>
+
+</body>
+</html>

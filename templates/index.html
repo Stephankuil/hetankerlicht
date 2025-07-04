@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Het Ankerlicht</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h1 { color: darkblue; }
+        nav a { margin-right: 15px; text-decoration: none; font-weight: bold; }
+        section { margin-top: 30px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 8px; border: 1px solid #ccc; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+
+    <h1>Dashboard - Activiteitenoverzicht</h1>
+
+    <nav>
+        <a href="{{ url_for('activiteiten') }}">📅 Alle activiteiten</a>
+        <a href="{{ url_for('activiteit_aanmaken') }}">➕ Activiteit toevoegen</a>
+        <a href="{{ url_for('lidworden') }}">👥 Lid worden</a>
+        <a href="{{ url_for('foto_toevoegen') }}">🖼️ Foto toevoegen</a>
+
+        <a href="{{ url_for('logout') }}">🚪 Uitloggen</a>
+    </nav>
+
+    <section>
+        <h2>🔔 Komende activiteiten</h2>
+        {% if activiteiten %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Titel</th>
+                    <th>Datum</th>
+                    <th>Actie</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for activiteit in activiteiten %}
+                <tr>
+                    <td>{{ activiteit['titel'] }}</td>
+                    <td>{{ activiteit['datum'] }}</td>
+                    <td><a href="{{ url_for('activiteit_detail', id=activiteit['id']) }}">Bekijken</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>Er zijn nog geen activiteiten ingepland.</p>
+        {% endif %}
+    </section>
+
+</body>
+</html>

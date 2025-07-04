@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Fotogalerij - Het Ankerlicht</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h1 { color: #2c3e50; }
+        .galerij { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+        .item { width: 300px; background-color: #fafafa; padding: 10px; border: 1px solid #ddd; border-radius: 10px; text-align: center; }
+        .item img { max-width: 100%; height: auto; border-radius: 5px; }
+        .item a { color: #2c3e50; font-weight: bold; text-decoration: none; }
+        .item a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <h1>📷 Fotogalerij</h1>
+
+    <div class="galerij">
+        {% for foto in fotos %}
+        <div class="item">
+            <h3>{{ foto['titel'] }}</h3>
+            {% if foto['foto_url'] %}
+                <img src="{{ foto['foto_url'] }}" alt="{{ foto['titel'] }}">
+            {% endif %}
+            {% if foto['video_url'] %}
+                <a href="{{ foto['video_url'] }}" target="_blank" rel="noopener noreferrer">
+                    Bekijk video: {{ foto['titel'] }}
+                </a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+</body>
+</html>

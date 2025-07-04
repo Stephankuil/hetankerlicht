@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Alle Activiteiten - Het Ankerlicht</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h1 { color: darkgreen; }
+        a { text-decoration: none; color: darkblue; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 10px; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+
+    <h1>Activiteitenoverzicht</h1>
+    <a href="{{ url_for('dashboard') }}">⬅️ Terug naar dashboard</a> |
+    <a href="{{ url_for('activiteit_aanmaken') }}">➕ Nieuwe activiteit</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Titel</th>
+                <th>Datum</th>
+                <th>Actie</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for activiteit in activiteiten %}
+            <tr>
+                <td>{{ activiteit['titel'] }}</td>
+                <td>{{ activiteit['datum'] }}</td>
+                <td><a href="{{ url_for('activiteit_detail', id=activiteit['id']) }}">Bekijken</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>
