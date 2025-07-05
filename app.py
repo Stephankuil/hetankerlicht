@@ -4,6 +4,7 @@ import sqlite3
 import os
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
+from datetime import date
 
 load_dotenv()
 
@@ -38,7 +39,25 @@ def home():
 # Portfolio / Over Het Ankerlicht
 @app.route('/over')
 def over():
-    return render_template('over.html')
+    vandaag = date.today().isoformat()  # 'YYYY-MM-DD' formaat
+    conn = sqlite3.connect('ankerlicht.db')
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    # Selecteer activiteiten van vandaag of later, gesorteerd op datum, max 3
+    cursor.execute("""
+        SELECT * FROM activiteiten 
+        WHERE datum >= ? 
+        ORDER BY datum ASC 
+        LIMIT 3
+    """, (vandaag,))
+    activiteiten = cursor.fetchall()
+    conn.close()
+    return render_template('over.html', activiteiten=activiteiten)
+
+
+@app.route('/over-ons')
+def over_ons():
+    return render_template('over_ons.html')
 
 # Publieke agenda
 @app.route('/agenda')

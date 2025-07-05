@@ -4,25 +4,41 @@
     <meta charset="UTF-8">
     <title>Welkom bij Het Ankerlicht</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 80px; background-color: #f2f2f2; }
-        h1 { font-size: 2.5em; color: #003366; }
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #003366;
+            margin-bottom: 30px;
+        }
+        .container {
+            display: inline-block;
+        }
+        .container img {
+            max-width: 600px;
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: block;
+            margin: 0 auto 25px auto;
+        }
         .btn {
-            padding: 15px 30px;
+            display: inline-block;
+            padding: 15px 40px;
             font-size: 1.2em;
             background-color: #003366;
             color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
             text-decoration: none;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
         }
         .btn:hover {
-            background-color: #001f3f;
-        }
-        img {
-            max-width: 500px;
-            margin-top: 40px;
-            border-radius: 10px;
+            background-color: #001f4d;
         }
     </style>
 </head>
@@ -30,9 +46,10 @@
 
     <h1>Welkom bij Het Ankerlicht ⚓</h1>
 
-    <a class="btn" href="{{ url_for('over') }}">Ontdek Het Ankerlicht</a>
-
-    <img src="{{ url_for('static', filename='images/ankerlicht.jpg') }}" alt="Het Ankerlicht">
+    <div class="container">
+        <img src="{{ url_for('static', filename='uploads/Ankerlicht_vooraanzicht.jpeg') }}" alt="Het Ankerlicht">
+        <a href="{{ url_for('over') }}" class="btn">Ontdek Het Ankerlicht</a>
+    </div>
 
 </body>
 </html>
