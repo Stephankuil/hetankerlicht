@@ -1,37 +1,40 @@
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-    <meta charset="UTF-8">
-    <title>Fotogalerij - Het Ankerlicht</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        h1 { color: #2c3e50; }
-        .galerij { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
-        .item { width: 300px; background-color: #fafafa; padding: 10px; border: 1px solid #ddd; border-radius: 10px; text-align: center; }
-        .item img { max-width: 100%; height: auto; border-radius: 5px; }
-        .item a { color: #2c3e50; font-weight: bold; text-decoration: none; }
-        .item a:hover { text-decoration: underline; }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
 
+{% block title %}Fotogalerij – Het Ankerlicht{% endblock %}
+
+{% block content %}
+  <div class="galerij-container">
     <h1>📷 Fotogalerij</h1>
+    <p><a href="{{ url_for('over') }}" class="btn">⬅️ Ontdek Het Ankerlicht</a></p>
 
     <div class="galerij">
-        {% for foto in fotos %}
+      {% for foto in fotos %}
         <div class="item">
-            <h3>{{ foto['titel'] }}</h3>
-            {% if foto['foto_url'] %}
-                <img src="{{ foto['foto_url'] }}" alt="{{ foto['titel'] }}">
-            {% endif %}
-            {% if foto['video_url'] %}
-                <a href="{{ foto['video_url'] }}" target="_blank" rel="noopener noreferrer">
-                    Bekijk video: {{ foto['titel'] }}
-                </a>
-            {% endif %}
-        </div>
-        {% endfor %}
-    </div>
+          <h3>{{ foto['titel'] }}</h3>
 
-</body>
-</html>
+          {% if foto['foto_url'] %}
+            <img src="{{ foto['foto_url'] }}" alt="{{ foto['titel'] }}">
+          {% elif foto['video_url'] %}
+            <img src="{{ url_for('static', filename='images/video_placeholder.jpg') }}" alt="Video">
+          {% endif %}
+
+          {% if foto['video_url'] %}
+            <p>
+              <a href="{{ foto['video_url'] }}" target="_blank" rel="noopener noreferrer">
+                ▶️ Bekijk video
+              </a>
+            </p>
+          {% endif %}
+
+          {% if session.get('logged_in') %}
+            <form method="POST" action="{{ url_for('foto_verwijderen', foto_id=foto['id']) }}" onsubmit="return confirm('Weet je zeker dat je deze foto of video wilt verwijderen?');">
+              <button type="submit" style="margin-top: 10px; background-color: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 5px;">
+                🗑️ Verwijderen
+              </button>
+            </form>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

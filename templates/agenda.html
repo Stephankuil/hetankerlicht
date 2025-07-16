@@ -1,44 +1,33 @@
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-    <meta charset="UTF-8">
-    <title>Agenda - Het Ankerlicht</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 30px; background-color: #ffffff; }
-        h1 { color: #2c3e50; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 10px; border: 1px solid #ccc; }
-        th { background-color: #f0f0f0; }
-        a { text-decoration: none; color: #2c3e50; }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
 
+{% block title %}Agenda{% endblock %}
+
+{% block content %}
+  <div class="agenda-container">
     <h1>📅 Agenda</h1>
-    <a href="{{ url_for('over') }}">⬅️ Terug naar Overzicht</a>
+    <a href="{{ url_for('over') }}" class="agenda-back">⬅️ Terug naar Overzicht</a>
 
     {% if activiteiten %}
-    <table>
+      <table class="agenda-table">
         <thead>
-            <tr>
-                <th>Titel</th>
-                <th>Datum</th>
-                <th>Beschrijving</th>
-            </tr>
+          <tr>
+            <th>Titel</th>
+            <th>Datum</th>
+            <th>Beschrijving</th>
+          </tr>
         </thead>
         <tbody>
-            {% for activiteit in activiteiten %}
+          {% for activiteit in activiteiten %}
             <tr>
-                <td>{{ activiteit['titel'] }}</td>
-                <td>{{ activiteit['datum'] }}</td>
-                <td>{{ activiteit['beschrijving'] or 'Geen beschrijving' }}</td>
+              <td>{{ activiteit['titel'] }}</td>
+              <td>{{ activiteit['datum'] }}</td>
+              <td>{{ activiteit['beschrijving'] or 'Geen beschrijving' }}</td>
             </tr>
-            {% endfor %}
+          {% endfor %}
         </tbody>
-    </table>
+      </table>
     {% else %}
-        <p>Er zijn momenteel geen geplande activiteiten.</p>
+      <p class="no-activiteiten">Er zijn momenteel geen geplande activiteiten.</p>
     {% endif %}
-
-</body>
-</html>
+  </div>
+{% endblock %}

@@ -1,0 +1,24 @@
+
+
+
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container">
+    <h1>📄 Beschikbare PDF's</h1>
+    {% if pdfs %}
+      <ul>
+        {% for pdf in pdfs %}
+          <li>
+            <a href="{{ url_for('static', filename='pdfs/' ~ pdf) }}" download>
+              {{ pdf }}
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="no-pdfs">Er zijn nog geen PDF's beschikbaar.</p>
+    {% endif %}
+  </div>
+{% endblock %}
+

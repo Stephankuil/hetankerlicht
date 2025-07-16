@@ -1,14 +1,20 @@
 # ankerlicht_app.py
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 import sqlite3
 import os
 from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
 from datetime import date
+import re
 
 load_dotenv()
 
+from flask import Flask
+import os
+
 app = Flask(__name__)
+
+# 🔐 Geheimen uit .env
 app.secret_key = os.getenv("ANKERLICHT_SECRET_KEY", "defaultsecret")
 
 USERNAME = os.getenv("ANKERLICHT_USERNAME")
@@ -17,14 +23,37 @@ PASSWORD = os.getenv("ANKERLICHT_PASSWORD")
 print(f"Gebruikersnaam uit .env: {USERNAME}")
 print(f"Wachtwoord uit .env: {PASSWORD}")
 
-UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static', 'uploads')
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+# 📂 Uploadfolders
+UPLOAD_FOLDER_IMAGES = os.path.join(os.getcwd(), 'static', 'uploads')
+UPLOAD_FOLDER_PDFS = os.path.join(os.getcwd(), 'static', 'pdfs')
 
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+# 📁 Zorg dat mappen bestaan
+os.makedirs(UPLOAD_FOLDER_IMAGES, exist_ok=True)
+os.makedirs(UPLOAD_FOLDER_PDFS, exist_ok=True)
+
+# 📦 Configuratie
+app.config['UPLOAD_FOLDER_IMAGES'] = UPLOAD_FOLDER_IMAGES
+app.config['UPLOAD_FOLDER_PDFS'] = UPLOAD_FOLDER_PDFS
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # max 16MB
+
+# ✅ Toegestane extensies
+ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_PDF_EXTENSIONS = {'pdf'}
 
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_IMAGE_EXTENSIONS
+
+
+import re
+
+def extract_youtube_id(url):
+    """
+    Haalt de YouTube video ID uit een URL.
+    Ondersteunt youtu.be en youtube.com links.
+    """
+    pattern = r'(?:v=|\/)([0-9A-Za-z_-]{11})'
+    match = re.search(pattern, url)
+    return match.group(1) if match else None
 
 def get_db_connection():
     conn = sqlite3.connect('ankerlicht.db')
@@ -87,7 +116,7 @@ def foto_toevoegen():
         return redirect(url_for('login'))
 
     if request.method == 'POST':
-        titel = request.form['titel']
+        titel = request.form['titel'].strip()
         foto_url = None
         video_url = None
 
@@ -95,11 +124,14 @@ def foto_toevoegen():
             file = request.files['file']
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                file.save(os.path.join(app.config['UPLOAD_FOLDER_IMAGES'], filename))
                 foto_url = f"/static/uploads/{filename}"
 
         if 'youtube_url' in request.form and request.form['youtube_url'].strip() != '':
             video_url = request.form['youtube_url'].strip()
+            video_id = extract_youtube_id(video_url)
+            if video_id and not foto_url:
+                foto_url = f"https://img.youtube.com/vi/{video_id}/hqdefault.jpg"
 
         if not titel:
             return "Titel is verplicht."
@@ -115,6 +147,27 @@ def foto_toevoegen():
 
     return render_template('foto_toevoegen.html')
 
+
+@app.route('/fotos/verwijder/<int:foto_id>', methods=['POST'])
+def foto_verwijderen(foto_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    foto = conn.execute('SELECT * FROM fotos WHERE id = ?', (foto_id,)).fetchone()
+
+    if foto:
+        # Verwijder het bestand uit de uploads-map
+        if foto['foto_url']:
+            bestand_pad = foto['foto_url'].replace("/static/", "static/")
+            if os.path.exists(bestand_pad):
+                os.remove(bestand_pad)
+
+        conn.execute('DELETE FROM fotos WHERE id = ?', (foto_id,))
+        conn.commit()
+
+    conn.close()
+    return redirect(url_for('fotos'))
 
 
 # Dashboard - alleen voor ingelogde beheerders
@@ -217,6 +270,56 @@ def activiteit_aanmaken():
         conn.close()
         return redirect(url_for('activiteiten'))
     return render_template('activiteit_aanmaken.html')
+
+
+
+@app.route('/verhuur')
+def verhuur():
+    return render_template('verhuur.html')
+
+@app.route('/sponsers')
+def sponsers():
+    return render_template('sponsers.html')
+
+@app.route('/krantje')
+def krantje():
+    return render_template('pdf_downloads.html')
+
+
+
+@app.route("/upload_pdf", methods=["GET", "POST"])
+def upload_pdf():
+    if not session.get("logged_in"):
+        flash("Log eerst in om PDF's te uploaden.")
+        return redirect(url_for("login"))  # Zorg dat je een login-route hebt
+
+    if request.method == "POST":
+        if "pdf_file" not in request.files:
+            flash("Geen bestand geselecteerd.")
+            return redirect(request.url)
+        file = request.files["pdf_file"]
+        if file.filename == "":
+            flash("Bestandsnaam is leeg.")
+            return redirect(request.url)
+        if file and file.filename.lower().endswith(".pdf"):
+            filepath = os.path.join(app.config["UPLOAD_FOLDER_PDFS"], file.filename)
+            file.save(filepath)
+            flash("Upload geslaagd!")
+            return redirect(url_for("pdf_downloads"))
+        else:
+            flash("Alleen PDF-bestanden zijn toegestaan.")
+            return redirect(request.url)
+
+    return render_template("upload_pdf.html")
+
+@app.route("/pdf_downloads")
+def pdf_downloads():
+    folder = app.config["UPLOAD_FOLDER_PDFS"]
+    pdf_files = [
+        f for f in os.listdir(folder)
+        if f.lower().endswith(".pdf")
+    ]
+    return render_template("pdf_downloads.html", pdfs=pdf_files)
 
 if __name__ == '__main__':
     app.run(debug=True)

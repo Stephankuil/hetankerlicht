@@ -115,12 +115,15 @@
 <body>
 
   <nav class="sidebar">
+    <a href="{{ url_for('over') }}">🏠 Home</a>
+    <a href="{{ url_for('over_ons') }}">ℹ️ Over Ons</a>
+    <a href="{{ url_for('pdf_downloads') }}">📰 Nieuwsbrief</a>
     <a href="{{ url_for('publieke_agenda') }}">📅 Bekijk de Agenda</a>
+    <a href="{{ url_for('fotos') }}">📸 Foto's</a>
     <a href="{{ url_for('lidworden') }}">👥 Lid worden</a>
     <a href="{{ url_for('contact') }}">📬 Contact</a>
-    <a href="{{ url_for('fotos') }}">📸 Foto's</a>
-    <a href="{{ url_for('over_ons') }}">ℹ️ Over Ons</a>
-
+    <a href="{{ url_for('sponsers') }}"> 💼 Sponsoren </a>
+    <a href="{{ url_for('verhuur') }}"> 🏠  Zaalverhuur</a>
   </nav>
 
   <div class="main-container">

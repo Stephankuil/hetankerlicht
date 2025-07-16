@@ -1,15 +1,7 @@
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-    <meta charset="UTF-8">
-    <title>Lid worden - Het Ankerlicht</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; line-height: 1.6; }
-        h1 { color: darkblue; }
-        a { display: inline-block; margin-top: 20px; text-decoration: none; }
-    </style>
-</head>
-<body>
+
+{% extends "base.html" %}
+
+{% block content %}
 
     <h1>👥 Lid worden van Het Ankerlicht</h1>
 
@@ -28,6 +20,4 @@
     </p>
 
     <a href="{{ url_for('over') }}">⬅️ Terug naar startpagina</a>
-
-</body>
-</html>
+{% endblock %}
