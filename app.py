@@ -63,6 +63,8 @@ def get_db_connection():
 # Homepagina - publiek toegankelijk
 @app.route('/')
 def home():
+    print("Flask app is gestart met home route actief")
+
     return render_template('home.html')
 
 # Portfolio / Over Het Ankerlicht
@@ -244,6 +246,49 @@ def activiteit_bewerken(id):
 def lidworden():
     return render_template('lidworden.html')
 
+from flask import Flask, render_template, request, redirect, url_for, flash
+import smtplib
+import os
+from email.mime.text import MIMEText
+from dotenv import load_dotenv
+
+load_dotenv()  # Voor .env-gegevens zoals e-mailwachtwoord
+
+
+app.secret_key = "geheim"  # Voor flash-meldingen
+
+@app.route("/lidwordenemail", methods=["GET", "POST"])
+def lid_worden():
+    if request.method == "POST":
+        naam = request.form["naam"]
+        email = request.form["email"]
+        bericht = request.form["bericht"]
+
+        # 📨 E-mail versturen
+        verzender = os.getenv("EMAIL_USER")
+        wachtwoord = os.getenv("EMAIL_PASS")
+        ontvanger = "jouw@emailadres.nl"
+
+        body = f"Nieuw lidmaatschap via de website:\n\nNaam: {naam}\nE-mail: {email}\nBericht:\n{bericht}"
+        msg = MIMEText(body)
+        msg["Subject"] = "Nieuwe aanmelding Het Ankerlicht"
+        msg["From"] = verzender
+        msg["To"] = ontvanger
+
+        try:
+            server = smtplib.SMTP_SSL("smtp.gmail.com", 465)
+            server.login(verzender, wachtwoord)
+            server.send_message(msg)
+            server.quit()
+            flash("✅ Je bericht is verstuurd! We nemen snel contact met je op.", "success")
+        except Exception as e:
+            print(e)
+            flash("❌ Er ging iets mis bij het verzenden van je bericht.", "error")
+
+        return redirect(url_for("lid_worden"))
+
+    return render_template("lidworden.html")
+
 # Activiteitenoverzicht
 @app.route('/activiteiten')
 def activiteiten():
@@ -322,4 +367,4 @@ def pdf_downloads():
     return render_template("pdf_downloads.html", pdfs=pdf_files)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=8000,debug=True)

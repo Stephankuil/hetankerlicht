@@ -6,8 +6,18 @@
 {% block content %}
   <h1>📬 Contact</h1>
   <p>Heb je vragen, ideeën of wil je vrijwilliger worden?</p>
-  <p>Stuur een mailtje naar: <strong>info@hetankerlicht.nl</strong></p>
-  <p>Of kom langs op ons adres: Ankerstraat 1, 1234 AB Buurtstad</p>
+  <p>Stuur een mailtje naar: <strong>hetankerlicht@kpnmail.nl</strong></p>
+  <p>Of kom langs op ons adres: <strong>Plaswijckweg 110, 2804 ZA Gouda</strong></p>
 
-  <a href="{{ url_for('over') }}" class="btn">⬅️ Terug naar startpagina</a>
+  <h2>📍 Locatie op de kaart</h2>
+  <div style="max-width: 800px; margin: 20px auto;">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2454.3182414853004!2d4.710202277573162!3d52.0375165718379!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47c5d6c95d711657%3A0xad456fa4f2ad32f7!2sPlaswijckweg%20110%2C%202804%20ZA%20Gouda!5e0!3m2!1snl!2snl!4v1752770759896!5m2!1snl!2snl"
+      width="100%" height="400"
+      style="border:0; border-radius: 12px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);"
+      allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </div>
+
+  <a href="{{ url_for('over') }}" class="btn" style="display: inline-block; margin-top: 20px;">⬅️ Terug naar startpagina</a>
 {% endblock %}
