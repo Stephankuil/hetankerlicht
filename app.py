@@ -255,7 +255,6 @@ from dotenv import load_dotenv
 load_dotenv()  # Voor .env-gegevens zoals e-mailwachtwoord
 
 
-app.secret_key = "geheim"  # Voor flash-meldingen
 
 @app.route("/lidwordenemail", methods=["GET", "POST"])
 def lid_worden():
