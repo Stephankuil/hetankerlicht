@@ -4,180 +4,15 @@
 <head>
   <meta charset="UTF-8" />
   <title>{% block title %}Het Ankerlicht{% endblock %}</title>
-  <style>
-    .galerij-container {
-  background-color: #fff;
-  padding: 30px 40px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-  margin-bottom: 40px;
-}
 
-.galerij {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+   <link rel="stylesheet" href="{{ url_for('static', filename='css/activiteiten.css') }}">
 
-.item {
-  width: 300px;
-  background-color: #fafafa;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  text-align: center;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-}
 
-.item img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 6px;
-  margin-bottom: 10px;
-}
-
-.item h3 {
-  margin-top: 0;
-  font-size: 1.2rem;
-  color: #2c3e50;
-}
-
-.item a {
-  color: #2980b9;
-  font-weight: bold;
-  text-decoration: none;
-}
-
-.item a:hover {
-  text-decoration: underline;
-}
-
-    .agenda-container {
-  background-color: white;
-  padding: 30px 40px;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  max-width: 900px;
-  margin-bottom: 40px;
-}
-
-.agenda-back {
-  display: inline-block;
-  margin-bottom: 20px;
-  font-weight: bold;
-  text-decoration: none;
-  color: #34495e;
-}
-
-.agenda-back:hover {
-  color: #2980b9;
-}
-
-.agenda-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 1rem;
-}
-
-.agenda-table th, .agenda-table td {
-  padding: 12px 16px;
-  border-bottom: 1px solid #ddd;
-  text-align: left;
-}
-
-.agenda-table th {
-  background-color: #ecf0f1;
-  color: #2c3e50;
-}
-
-.agenda-table tr:hover {
-  background-color: #f1f9ff;
-}
-
-.no-activiteiten {
-  font-style: italic;
-  color: #888;
-  margin-top: 20px;
-}
-
-    /* ✨ CSS die je al had */
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      display: flex;
-      background-color: #f0f0f0;
-      color: #2c3e50;
-    }
-    .sidebar {
-      background-color: #2c3e50;
-      width: 180px;
-      min-height: 100vh;
-      padding-top: 40px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      align-items: center;
-    }
-    .sidebar a {
-      display: block;
-      color: white;
-      text-decoration: none;
-      padding: 12px 20px;
-      width: 140px;
-      text-align: center;
-      border-radius: 8px;
-      font-size: 1.1em;
-      transition: background-color 0.3s ease;
-    }
-    .sidebar a:hover {
-      background-color: #1a242f;
-    }
-    .content {
-      flex-grow: 1;
-      padding: 40px 60px;
-      max-width: 900px;
-    }
-    h1 {
-      margin-bottom: 20px;
-    }
-    img {
-      width: 100%;
-      max-width: 700px;
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      margin-bottom: 25px;
-    }
-    p {
-      line-height: 1.6;
-      font-size: 1.1em;
-    }
-    .main-container {
-      display: flex;
-      gap: 40px;
-      padding: 40px 60px;
-      flex-wrap: wrap;
-    }
-    .content-wrapper {
-      flex: 1 1 500px;
-      max-width: 600px;
-    }
-
-  .team-member {
-  margin-bottom: 15px;
-}
-.team-member h3 {
-  margin: 0 0 5px 0;
-  color: #2c3e50;
-}
-.team-member p {
-  margin: 0;
-  color: #555;
-}
-
-  </style>
 </head>
 <body>
+
+
 
   <!-- 🔹 SIDEBAR -->
   <nav class="sidebar">
@@ -197,5 +32,22 @@
     {% block content %}{% endblock %}
   </div>
 
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const bgUrl = "{{ url_for('static', filename='uploads/ocean_landscape.jpg') }}";
+    document.body.style.setProperty('--bg-image', `url(${bgUrl})`);
+    document.querySelector("body::before"); // ensure selector works
+    const style = document.createElement('style');
+    style.innerHTML = `
+      body::before {
+        background-image: url(${bgUrl});
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-attachment: fixed;
+      }
+    `;
+    document.head.appendChild(style);
+  });
+</script>
 </body>
 </html>

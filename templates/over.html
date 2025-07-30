@@ -1,165 +1,38 @@
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-<meta charset="UTF-8" />
-<title>Over Het Ankerlicht</title>
-<style>
-  /* Algemene body en layout */
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    display: flex;
-    background-color: #f0f0f0;
-    color: #2c3e50;
-  }
-  /* Sidebar styling */
-  .sidebar {
-    background-color: #2c3e50;
-    width: 180px;
-    min-height: 100vh;
-    padding-top: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    align-items: center;
-  }
-  .sidebar a {
-    display: block;
-    color: white;
-    text-decoration: none;
-    padding: 12px 20px;
-    width: 140px;
-    text-align: center;
-    border-radius: 8px;
-    font-size: 1.1em;
-    transition: background-color 0.3s ease;
-  }
-  .sidebar a:hover {
-    background-color: #1a242f;
-  }
-  /* Hoofd content styling */
-  .content {
-    flex-grow: 1;
-    padding: 40px 60px;
-    max-width: 900px;
-  }
-  h1 {
-    margin-bottom: 20px;
-  }
-  img {
-    width: 100%;
-    max-width: 700px;
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    margin-bottom: 25px;
-  }
-  p {
-    line-height: 1.6;
-    font-size: 1.1em;
-  }
+{% extends 'base.html' %}
+{% block title %}Over Het Ankerlicht{% endblock %}
 
-  /* Activiteiten sectie */
-  .activiteiten-section {
-    margin-top: 50px;
-    max-width: 350px;
-    background-color: #ffffff;
-    border-radius: 12px;
-    padding: 20px 25px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  .activiteiten-section h2 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 1.4rem;
-    border-bottom: 2px solid #2c3e50;
-    padding-bottom: 8px;
-  }
-  .activiteit {
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #ddd;
-  }
-  .activiteit:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-  }
-  .activiteit strong {
-    color: #3742fa;
-    font-size: 1.1rem;
-  }
-  .activiteit p {
-    margin: 6px 0 8px 0;
-    color: #555;
-    font-size: 0.95rem;
-  }
-  .activiteit em {
-    font-size: 0.85rem;
-    color: #a4b0be;
-  }
+{% block content %}
+<div class="main-container">
 
-  /* Flex layout om content en activiteiten naast elkaar te zetten */
-  .main-container {
-    display: flex;
-    gap: 40px;
-    padding: 40px 60px;
-    flex-wrap: wrap;
-  }
-  .content-wrapper {
-    flex: 1 1 500px;
-    max-width: 600px;
-  }
-</style>
-</head>
-<body>
+  <!-- LINKERKANT -->
+  <main class="content-wrapper">
+    <h1>Welkom bij Buurtvereniging Het Ankerlicht ⚓</h1>
+    <img src="{{ url_for('static', filename='uploads/binnenaanzicht.jpeg') }}" alt="Binnenaanzicht">
+    <p>Het Ankerlicht is een warme en bruisende plek waar buren elkaar ontmoeten...</p>
+    <p>Vrijwilligers organiseren activiteiten voor jong en oud...</p>
+  </main>
 
-  <nav class="sidebar">
-    <a href="{{ url_for('over') }}">🏠 Home</a>
-    <a href="{{ url_for('over_ons') }}">ℹ️ Over Ons</a>
-    <a href="{{ url_for('pdf_downloads') }}">📰 Nieuwsbrief</a>
-    <a href="{{ url_for('publieke_agenda') }}">📅 Bekijk de Agenda</a>
-    <a href="{{ url_for('fotos') }}">📸 Foto's</a>
-    <a href="{{ url_for('lidworden') }}">👥 Lid worden</a>
-    <a href="{{ url_for('contact') }}">📬 Contact</a>
-    <a href="{{ url_for('sponsers') }}"> 💼 Sponsoren </a>
-    <a href="{{ url_for('verhuur') }}"> 🏠  Zaalverhuur</a>
-  </nav>
-
-  <div class="main-container">
-
-    <main class="content-wrapper">
-      <h1>Welkom bij Buurtvereniging Het Ankerlicht ⚓</h1>
-
-      <img src="{{ url_for('static', filename='uploads/binnenaanzicht.jpeg') }}" alt="Binnenaanzicht">
-
-
-      <p>
-        Het Ankerlicht is een warme en bruisende plek waar buren elkaar ontmoeten. Of je nu mee wil doen aan een dartstoernooi,
-        wil poolen met vrienden of een gezellige avond met muziek zoekt – het kan hier allemaal!
-      </p>
-
-      <p>
-        Vrijwilligers organiseren activiteiten voor jong en oud. Iedereen is welkom en niets moet.
-      </p>
-    </main>
-
-    <section class="activiteiten-section">
-      <h2>Aankomende activiteiten</h2>
-      {% if activiteiten %}
+  <!-- RECHTERKANT -->
+  <aside class="activiteiten-section">
+    <h2>Aankomende activiteiten</h2>
+    {% if activiteiten %}
+      <ul class="activiteiten-lijst">
         {% for activiteit in activiteiten %}
-          <div class="activiteit">
-            <strong>{{ activiteit.titel }}</strong>
-            <p>{{ activiteit.beschrijving }}</p>
-            <em>{{ activiteit.datum }}</em>
-          </div>
+          <li class="activiteit">
+            <div class="activiteit-header">
+              <span class="activiteit-titel">{{ activiteit.titel }}</span>
+              <span class="activiteit-datum">{{ activiteit.datum }}</span>
+            </div>
+            <p class="activiteit-beschrijving">{{ activiteit.beschrijving }}</p>
+          </li>
         {% endfor %}
-      {% else %}
-        <p>Er zijn geen aankomende activiteiten.</p>
-      {% endif %}
-    </section>
+      </ul>
+    {% else %}
+      <p class="geen-activiteiten">Er zijn geen aankomende activiteiten.</p>
+    {% endif %}
+  </aside>
 
-  </div>
+</div>
 
-</body>
-</html>
+
+{% endblock %}
