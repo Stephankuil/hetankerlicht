@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ artikel.titel }}</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 40px;
+      max-width: 800px;
+      margin: auto;
+      color: #333;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .inhoud {
+      font-size: 1.1em;
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 30px;
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>{{ artikel.titel }}</h1>
+
+  {% if artikel.afbeelding %}
+    <img src="{{ url_for('static', filename=artikel.afbeelding) }}" alt="Afbeelding bij nieuwtje">
+  {% endif %}
+
+<div class="inhoud">
+  {{ artikel.inhoud }}
+</div>
+
+
+  <a href="{{ url_for('nieuwtjes') }}">← Terug naar overzicht</a>
+
+</body>
+</html>

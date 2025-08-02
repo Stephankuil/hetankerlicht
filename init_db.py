@@ -22,15 +22,27 @@ CREATE TABLE IF NOT EXISTS leden (
 )
 """)
 
+# Maak de foto's-tabel aan
 cursor.execute("""
-CREATE TABLE fotos (
+CREATE TABLE IF NOT EXISTS fotos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     titel TEXT NOT NULL,
     foto_url TEXT,
     video_url TEXT
-);
+)
 """)
 
+# Maak de nieuwtjes-tabel aan
+cursor.execute("""
+CREATE TABLE nieuwtjes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    titel TEXT NOT NULL,
+    inhoud TEXT NOT NULL,
+    afbeelding TEXT,
+    datum TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+""")
 
 conn.commit()
 conn.close()

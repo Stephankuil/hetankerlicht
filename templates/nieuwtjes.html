@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/nieuwtjes.css') }}">
+
+
+
+<div class="card-container">
+  {% for artikel in artikelen %}
+    <div class="card">
+      {% if artikel['afbeelding'] %}
+        <img src="{{ url_for('static', filename=artikel['afbeelding']) }}" class="card-img" alt="{{ artikel['titel'] }}">
+      {% endif %}
+      <div class="card-content">
+        <h3>{{ artikel['titel'] }}</h3>
+        <p>{{ artikel['inhoud'][:120] }}...</p>
+        <a href="{{ url_for('nieuwtje_detail', nieuwtje_id=artikel['id']) }}" class="read-more">
+          ➜ Lees meer
+        </a>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -12,7 +12,7 @@ load_dotenv()
 from flask import Flask
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 
 # 🔐 Geheimen uit .env
 app.secret_key = os.getenv("ANKERLICHT_SECRET_KEY", "defaultsecret")
@@ -26,6 +26,14 @@ print(f"Wachtwoord uit .env: {PASSWORD}")
 # 📂 Uploadfolders
 UPLOAD_FOLDER_IMAGES = os.path.join(os.getcwd(), 'static', 'uploads')
 UPLOAD_FOLDER_PDFS = os.path.join(os.getcwd(), 'static', 'pdfs')
+
+
+
+UPLOAD_FOLDER_NIEUWTJES = os.path.join(os.getcwd(), 'static', 'uploads', 'nieuwtjes')
+os.makedirs(UPLOAD_FOLDER_NIEUWTJES, exist_ok=True)
+
+
+
 
 # 📁 Zorg dat mappen bestaan
 os.makedirs(UPLOAD_FOLDER_IMAGES, exist_ok=True)
@@ -364,6 +372,63 @@ def pdf_downloads():
         if f.lower().endswith(".pdf")
     ]
     return render_template("pdf_downloads.html", pdfs=pdf_files)
+
+
+
+
+@app.route('/nieuwtjes')
+def nieuwtjes():
+    print("✅ Route /nieuwtjes wordt aangeroepen!")
+    conn = sqlite3.connect("ankerlicht.db")
+    conn.row_factory = sqlite3.Row  # zodat je dict-achtige objecten krijgt
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM nieuwtjes ORDER BY id DESC")
+    artikelen = cursor.fetchall()
+    conn.close()
+
+    return render_template('nieuwtjes.html', artikelen=artikelen)
+
+@app.route('/nieuwtjes/<int:nieuwtje_id>')
+def nieuwtje_detail(nieuwtje_id):
+    conn = sqlite3.connect("ankerlicht.db")
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM nieuwtjes WHERE id = ?", (nieuwtje_id,))
+    artikel = cursor.fetchone()
+    conn.close()
+
+    if artikel:
+        return render_template('nieuwtje_detail.html', artikel=artikel)
+    return "Artikel niet gevonden", 404
+
+import sqlite3
+
+@app.route('/nieuwtjes/nieuw', methods=['GET', 'POST'])
+def nieuwtjes_toevoegen():
+    if request.method == 'POST':
+        titel = request.form['titel']
+        inhoud = request.form['inhoud']
+        afbeelding = request.files['afbeelding']
+
+        bestandsnaam = secure_filename(afbeelding.filename)
+        pad = os.path.join(UPLOAD_FOLDER_NIEUWTJES, bestandsnaam)
+        afbeelding.save(pad)
+
+        # Sla op in de database
+        conn = sqlite3.connect("ankerlicht.db")
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO nieuwtjes (titel, inhoud, afbeelding)
+            VALUES (?, ?, ?)
+        """, (titel, inhoud, f'uploads/nieuwtjes/{bestandsnaam}'))
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for('nieuwtjes'))
+
+    return render_template('nieuwtjes_toevoegen.html')
+
+
 
 if __name__ == '__main__':
     app.run(port=8000,debug=True)

@@ -1,0 +1,33 @@
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    .bedrijf {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .bedrijf img {
+      max-width: 300px;
+      display: block;
+      margin-bottom: 15px;
+    }
+    h2 {
+      margin-top: 0;
+    }
+    a {
+      color: #1a73e8;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .separator {
+      margin: 40px 0;
+      border: none;
+      border-top: 4px solid #ccc;
+    }
