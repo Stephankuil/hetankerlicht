@@ -28,6 +28,8 @@
 
           {% if session.get('logged_in') %}
             <form method="POST" action="{{ url_for('foto_verwijderen', foto_id=foto['id']) }}" onsubmit="return confirm('Weet je zeker dat je deze foto of video wilt verwijderen?');">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
               <button type="submit" style="margin-top: 10px; background-color: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 5px;">
                 🗑️ Verwijderen
               </button>

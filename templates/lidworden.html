@@ -1,73 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <style>
-    .lid-container {
-        max-width: 700px;
-        margin: 0 auto;
-        padding: 30px;
-        background-color: #f9f9f9;
-        border-radius: 12px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
+<link rel="stylesheet" href="{{ url_for('static', filename='css/lidworden.css') }}">
 
-    .lid-container h1 {
-        color: #2c3e50;
-        text-align: center;
-        margin-bottom: 20px;
-    }
 
-    .lid-container ul {
-        margin-bottom: 20px;
-        padding-left: 20px;
-    }
-
-    .lid-container p {
-        margin-bottom: 20px;
-    }
-
-    form label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-    }
-
-    form input,
-    form textarea {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 20px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        font-size: 16px;
-    }
-
-    form button {
-        background-color: #2c3e50;
-        color: white;
-        border: none;
-        padding: 12px 20px;
-        border-radius: 8px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    form button:hover {
-        background-color: #1a242f;
-    }
-
-    .terug-link {
-        display: inline-block;
-        margin-top: 20px;
-        text-decoration: none;
-        color: #2c3e50;
-    }
-
-    .terug-link:hover {
-        text-decoration: underline;
-    }
-  </style>
 
   <div class="lid-container">
     <h1>👥 Lid worden van Het Ankerlicht</h1>
@@ -87,6 +23,7 @@
     </p>
 
     <form action="https://formspree.io/f/xgvzvvlq" method="POST">
+
       <label for="naam">Naam:</label>
       <input type="text" name="naam" id="naam" required>
 

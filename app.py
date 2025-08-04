@@ -1,5 +1,5 @@
 # ankerlicht_app.py
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, make_response
 import sqlite3
 import os
 from dotenv import load_dotenv
@@ -7,12 +7,17 @@ from werkzeug.utils import secure_filename
 from datetime import date
 import re
 
+from flask_wtf.csrf import CSRFProtect, generate_csrf
+
+
 load_dotenv()
 
 from flask import Flask
 import os
 
 app = Flask(__name__, template_folder='templates')
+
+csrf = CSRFProtect(app)
 
 # 🔐 Geheimen uit .env
 app.secret_key = os.getenv("ANKERLICHT_SECRET_KEY", "defaultsecret")
@@ -47,6 +52,40 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # max 16MB
 # ✅ Toegestane extensies
 ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 ALLOWED_PDF_EXTENSIONS = {'pdf'}
+
+
+@app.after_request
+def set_all_security_headers(response):
+    # Beveiliging tegen clickjacking
+    response.headers["X-Frame-Options"] = "DENY"
+
+    # Beveiliging tegen MIME-sniffing
+    response.headers["X-Content-Type-Options"] = "nosniff"
+
+    # Content Security Policy (tegen XSS)
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self'; "
+        "form-action 'self' https://formspree.io; "
+        "frame-src 'self' https://www.google.com https://www.google.nl; "
+        "child-src 'self' https://www.google.com https://www.google.nl;"
+    )
+
+    # Optioneel: voorkom lekken van serverinformatie
+    response.headers["Server"] = ""
+
+    # Beveiliging tegen Referrer-lekken
+    response.headers["Referrer-Policy"] = "no-referrer"
+
+    # Verouderd maar soms nog effectief tegen XSS
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+
+    return response
+
+
+@app.context_processor
+def inject_csrf_token():
+    return dict(csrf_token=generate_csrf)
+
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_IMAGE_EXTENSIONS

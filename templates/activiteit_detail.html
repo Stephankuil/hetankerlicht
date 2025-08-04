@@ -23,6 +23,8 @@
         <p>{{ activiteit['beschrijving'] or 'Geen beschrijving beschikbaar.' }}</p>
     </div>
 <form method="POST" action="{{ url_for('activiteit_verwijderen', id=activiteit['id']) }}" onsubmit="return confirm('Weet je zeker dat je deze activiteit wilt verwijderen?');">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
     <button type="submit">🗑️ Verwijderen</button>
 </form>
 

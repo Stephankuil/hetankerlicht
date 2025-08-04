@@ -18,6 +18,8 @@
     <h1>➕ Voeg een foto of video link toe</h1>
 
 <form action="{{ url_for('foto_toevoegen') }}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
     <label for="titel">Naam / Titel:</label>
     <input type="text" name="titel" required>
 

@@ -48,6 +48,7 @@
   <h1>Nieuwtje Toevoegen</h1>
 
   <form method="POST" enctype="multipart/form-data" action="{{ url_for('nieuwtjes_toevoegen') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
     <label for="titel">Titel:</label>
     <input type="text" id="titel" name="titel" required>

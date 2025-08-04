@@ -18,18 +18,21 @@
 
     <a href="{{ url_for('dashboard') }}">⬅️ Terug naar dashboard</a>
 
-    <form method="POST">
-        <label for="titel">Titel:</label>
-        <input type="text" name="titel" id="titel" required>
+<form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-        <label for="datum">Datum (YYYY-MM-DD):</label>
-        <input type="text" name="datum" id="datum" required>
+    <label for="titel">Titel:</label>
+    <input type="text" name="titel" id="titel" required>
 
-        <label for="beschrijving">Beschrijving:</label>
-        <textarea name="beschrijving" id="beschrijving" rows="4"></textarea>
+    <label for="datum">Datum (YYYY-MM-DD):</label>
+    <input type="text" name="datum" id="datum" required>
 
-        <button type="submit">Toevoegen</button>
-    </form>
+    <label for="beschrijving">Beschrijving:</label>
+    <textarea name="beschrijving" id="beschrijving" rows="4"></textarea>
+
+    <button type="submit">Toevoegen</button>
+</form>
+
 
 </body>
 </html>
