@@ -66,6 +66,8 @@ def set_all_security_headers(response):
     response.headers["Content-Security-Policy"] = (
         "default-src 'self'; "
         "form-action 'self' https://formspree.io; "
+        "script-src 'self'; "
+        "style-src 'self'; "
         "frame-src 'self' https://www.google.com https://www.google.nl; "
         "child-src 'self' https://www.google.com https://www.google.nl;"
     )
