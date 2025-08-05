@@ -3,28 +3,42 @@
 {% block title %}Over Ons - Het Ankerlicht{% endblock %}
 
 {% block content %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/over-ons.css') }}">
   <h1>Over Buurtvereniging Het Ankerlicht</h1>
 
   <p>Buurtvereniging Het Ankerlicht is een warme gemeenschap van enthousiaste buurtbewoners die zich inzetten voor een gezellige en sociale buurt. We organiseren activiteiten voor jong en oud om mensen samen te brengen en een fijne sfeer te creëren.</p>
 
   <p>Onze missie is om een plek te bieden waar iedereen zich welkom voelt en waar buren elkaar kunnen ontmoeten, ontspannen en plezier hebben.</p>
 
-  <h2>Ons Team</h2>
+  <h2>Het Bestuur</h2>
+  <ul class="bestuur">
+    <li><strong>Voorzitter:</strong><br>
+      Ronald van Zwienen<br>
+      <a href="mailto:r.zwienen@planet.nl">r.zwienen@planet.nl</a>
+    </li>
+    <li><strong>Secretaris:</strong> Ella Ploeg<br>
+      <a href="mailto:hetankerlicht@kpnmail.nl">hetankerlicht@kpnmail.nl</a>
+    </li>
+    <li><strong>Penningmeester:</strong><br>
+      Henk Hofstede
+    </li>
+    <li><strong>Bestuursleden:</strong><br>
+      Hans van Deuren<br>
+      Theo Stekelenburg
+    </li>
+  </ul>
 
-  <div class="team-member">
-    <h3>Jan de Vries</h3>
-    <p>Voorzitter & organisator van evenementen</p>
-  </div>
-
-  <div class="team-member">
-    <h3>Lisa Janssen</h3>
-    <p>Coördinator vrijwilligers</p>
-  </div>
-
-  <div class="team-member">
-    <h3>Ahmed El-Masri</h3>
-    <p>Communicatie en PR</p>
-  </div>
+  <h2>Contactpersonen diverse commissies</h2>
+  <ul class="commissies">
+    <li><strong>Activiteiten:</strong> Simone v.d. Kuij</li>
+    <li><strong>Bar:</strong> Ronald van Zwienen</li>
+    <li><strong>Verhuur derden:</strong><br>
+      Ella Ploeg<br>
+      Tel: 06 - 41966716<br>
+      <a href="mailto:hetankerlicht@kpnmail.nl">hetankerlicht@kpnmail.nl</a>
+    </li>
+  </ul>
 
   <p><a href="{{ url_for('over') }}" class="btn">← Terug naar het startscherm</a></p>
 {% endblock %}

@@ -1,0 +1,19 @@
+.bestuur, .commissies {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 30px;
+}
+
+.bestuur li, .commissies li {
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+a[href^="mailto:"] {
+  color: #2980b9;
+  text-decoration: none;
+}
+
+a[href^="mailto:"]:hover {
+  text-decoration: underline;
+}

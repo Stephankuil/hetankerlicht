@@ -1,0 +1,76 @@
+/* Algemene body styling */
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background-color: #f4f7f9;
+  color: #2c3e50;
+  margin: 0;
+  padding: 40px 20px;
+}
+
+/* Titel bovenaan */
+h1 {
+  text-align: center;
+  color: #1a5276;
+  font-size: 2rem;
+  margin-bottom: 30px;
+}
+
+/* Teruglink naar dashboard */
+a[href] {
+  display: inline-block;
+  color: #2980b9;
+  text-decoration: none;
+  margin-bottom: 30px;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+a[href]:hover {
+  color: #1f6391;
+}
+
+/* Formulier styling */
+form {
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+}
+
+/* Label en invoervelden */
+label {
+  display: block;
+  margin-top: 20px;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+input[type="text"],
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+/* Submit knop */
+button {
+  margin-top: 25px;
+  padding: 12px 24px;
+  background-color: #2980b9;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+button:hover {
+  background-color: #1f6391;
+}

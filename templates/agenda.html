@@ -3,6 +3,8 @@
 {% block title %}Agenda{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/agenda.css') }}">
+
   <div class="agenda-container">
     <h1>📅 Agenda</h1>
     <a href="{{ url_for('over') }}" class="agenda-back">⬅️ Terug naar Overzicht</a>
