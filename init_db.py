@@ -37,7 +37,7 @@ cursor.execute("""
 CREATE TABLE IF NOT EXISTS nieuwtjes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     titel TEXT NOT NULL,
-    korte_inhoud TEXT NOT NULL,
+    inhoud TEXT NOT NULL,
     afbeelding TEXT,
     datum TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )
