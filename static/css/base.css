@@ -96,6 +96,7 @@ body::before {
   opacity: 0.18;
   pointer-events: none;
 }
+
 /* === LAYOUT CONTAINER === */
 .main-container {
   display: flex;

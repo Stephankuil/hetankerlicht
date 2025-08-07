@@ -1,19 +1,64 @@
-.bestuur, .commissies {
-  list-style: none;
-  padding-left: 0;
+/* Algemene lay-out */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container voor de inhoud */
+.over-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+  background-color: #fff;
+}
+
+/* Hoofdtitel */
+.over-container h1 {
+  font-size: 2.4em;
+  margin-bottom: 20px;
+  color: #003366;
+  border-bottom: 3px solid #003366;
+  padding-bottom: 5px;
+}
+
+/* Subkoppen */
+.over-container h2 {
+  font-size: 1.6em;
+  margin-top: 40px;
+  margin-bottom: 15px;
+  color: #003366;
+}
+
+/* Paragrafen */
+.over-container p {
+  font-size: 1.1em;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+/* Lijsten */
+.over-container ul {
+  list-style: disc;
+  margin-left: 30px;
+  font-size: 1.05em;
   margin-bottom: 30px;
 }
 
-.bestuur li, .commissies li {
-  margin-bottom: 20px;
-  line-height: 1.6;
+.over-container ul li {
+  margin-bottom: 8px;
 }
 
-a[href^="mailto:"] {
-  color: #2980b9;
-  text-decoration: none;
+/* Horizontale lijn */
+.over-container hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  margin: 40px 0;
 }
 
-a[href^="mailto:"]:hover {
-  text-decoration: underline;
+/* Laatste alinea vet */
+.over-container p strong {
+  color: #003366;
 }
