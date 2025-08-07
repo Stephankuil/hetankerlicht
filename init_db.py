@@ -34,16 +34,15 @@ CREATE TABLE IF NOT EXISTS fotos (
 
 # Maak de nieuwtjes-tabel aan
 cursor.execute("""
-CREATE TABLE nieuwtjes (
+CREATE TABLE IF NOT EXISTS nieuwtjes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     titel TEXT NOT NULL,
-    inhoud TEXT NOT NULL,
+    korte_inhoud TEXT NOT NULL,
     afbeelding TEXT,
     datum TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
+)
 """)
 
 conn.commit()
 conn.close()
-print("Database en tabellen aangemaakt.")
+print("✅ Database en tabellen aangemaakt.")

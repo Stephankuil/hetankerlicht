@@ -419,7 +419,7 @@ def pdf_downloads():
 
 @app.route('/nieuwtjes')
 def nieuwtjes():
-    print("✅ Route /nieuwtjes wordt aangeroepen!")
+    print(" Route /nieuwtjes wordt aangeroepen!")
     conn = sqlite3.connect("ankerlicht.db")
     conn.row_factory = sqlite3.Row  # zodat je dict-achtige objecten krijgt
     cursor = conn.cursor()
