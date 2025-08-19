@@ -29,7 +29,14 @@ Aan de rechterkant van deze pagina zie je een overzicht van de komende activitei
           <li class="activiteit">
             <div class="activiteit-header">
               <span class="activiteit-titel">{{ activiteit.titel }}</span>
-              <span class="activiteit-datum">{{ activiteit.datum }}</span>
+              <span class="activiteit-datum">
+  {{ activiteit.datum.split('-')[0] }} : {{ activiteit.datum.split('-')[1] }} : {{ activiteit.datum.split('-')[2] }}
+  <br>
+  {{ activiteit.tijd }}
+</span>
+
+
+
             </div>
             <p class="activiteit-beschrijving">{{ activiteit.beschrijving }}</p>
           </li>

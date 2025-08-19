@@ -7,8 +7,9 @@ from werkzeug.utils import secure_filename
 from datetime import date
 import re
 
+from datetime import datetime
 from flask_wtf.csrf import CSRFProtect, generate_csrf
-
+from datetime import datetime
 
 load_dotenv()
 
@@ -352,19 +353,54 @@ def activiteiten():
 def activiteit_aanmaken():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
+
     if request.method == 'POST':
-        titel = request.form['titel']
-        datum = request.form['datum']
-        beschrijving = request.form['beschrijving']
+        titel = request.form.get('titel', '').strip()
+        datum = request.form.get('datum', '').strip()
+        tijd  = request.form.get('tijd', '').strip()  # kan leeg zijn
+        beschrijving = request.form.get('beschrijving', '').strip()
+
+        # basischecks
+        errors = []
+        if not titel:
+            errors.append("Titel is verplicht.")
+        # Datum valideren: YYYY-MM-DD
+        try:
+            datetime.strptime(datum, "%Y-%m-%d")
+        except ValueError:
+            errors.append("Datum moet in formaat YYYY-MM-DD.")
+
+        # Tijd valideren: mag leeg zijn, anders HH:MM of HH:MM:SS
+        if tijd:
+            try:
+                # eerst HH:MM proberen, anders HH:MM:SS
+                try:
+                    datetime.strptime(tijd, "%H:%M")
+                except ValueError:
+                    datetime.strptime(tijd, "%H:%M:%S")
+            except ValueError:
+                errors.append("Tijd moet HH:MM of HH:MM:SS zijn.")
+
+        if errors:
+            for e in errors:
+                flash(e, "error")
+            return render_template('activiteit_aanmaken.html')
+
+        # Normaliseer tijd naar HH:MM (optioneel)
+        if tijd:
+            # als gebruiker HH:MM:SS invult, knip naar HH:MM
+            tijd = tijd[:5]
+
         conn = get_db_connection()
-        conn.execute('INSERT INTO activiteiten (titel, datum, beschrijving) VALUES (?, ?, ?)',
-                     (titel, datum, beschrijving))
+        conn.execute(
+            'INSERT INTO activiteiten (titel, datum, tijd, beschrijving) VALUES (?, ?, ?, ?)',
+            (titel, datum, tijd if tijd else None, beschrijving)
+        )
         conn.commit()
         conn.close()
         return redirect(url_for('activiteiten'))
+
     return render_template('activiteit_aanmaken.html')
-
-
 
 @app.route('/verhuur')
 def verhuur():
@@ -468,6 +504,7 @@ def nieuwtjes_toevoegen():
         return redirect(url_for('nieuwtjes'))
 
     return render_template('nieuwtjes_toevoegen.html')
+
 
 
 
