@@ -117,3 +117,12 @@ body::before {
 .activiteiten-section {
   flex: 0 0 320px;
 }
+
+
+.activiteit-datum,
+.activiteit-tijd {
+  display: block;      /* zet ze onder elkaar */
+  font-style: italic;  /* zelfde stijl */
+  color: #555;
+  margin-top: 2px;
+}

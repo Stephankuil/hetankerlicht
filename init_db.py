@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS activiteiten (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     titel TEXT NOT NULL,
     datum TEXT NOT NULL,
+    tijd TEXT,
     beschrijving TEXT
 )
 """)
