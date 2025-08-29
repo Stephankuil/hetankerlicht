@@ -3,7 +3,7 @@ import sqlite3
 conn = sqlite3.connect("ankerlicht.db")
 cursor = conn.cursor()
 
-# Maak de activiteiten-tabel aan
+# Tabellen aanmaken (één statement per execute)
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS activiteiten (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -14,7 +14,6 @@ CREATE TABLE IF NOT EXISTS activiteiten (
 )
 """)
 
-# Maak de leden-tabel aan
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS leden (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -23,7 +22,6 @@ CREATE TABLE IF NOT EXISTS leden (
 )
 """)
 
-# Maak de foto's-tabel aan
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS fotos (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -33,7 +31,6 @@ CREATE TABLE IF NOT EXISTS fotos (
 )
 """)
 
-# Maak de nieuwtjes-tabel aan
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS nieuwtjes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -42,6 +39,18 @@ CREATE TABLE IF NOT EXISTS nieuwtjes (
     afbeelding TEXT,
     datum TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )
+""")
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS bezoekers (
+    id INTEGER PRIMARY KEY,
+    aantal INTEGER NOT NULL
+)
+""")
+
+# Startrecord voor teller: voorkom duplicate met OR IGNORE
+cursor.execute("""
+INSERT OR IGNORE INTO bezoekers (id, aantal) VALUES (1, 0)
 """)
 
 conn.commit()

@@ -126,3 +126,31 @@ body::before {
   color: #555;
   margin-top: 2px;
 }
+/* --- Hero layout: naast elkaar zolang het past --- */
+/* -- Alleen op de pagina waar de activiteiten naast de tekst mogen -- */
+.content.content--with-aside {
+  max-width: 1200px;        /* genoeg ruimte voor 2 kolommen */
+}
+
+/* Boven deze breedte naast elkaar, eronder onder elkaar */
+@media (min-width: 1100px){
+  .main-container{
+    flex-wrap: nowrap;      /* forceer naast elkaar als er ruimte is */
+  }
+  .content-wrapper{
+    min-width: 520px;       /* voorkom te smalle tekstkolom */
+    flex: 1 1 auto;
+    max-width: none;
+  }
+  .activiteiten-section{
+    flex: 0 0 360px;        /* vaste breedte voor de kaart */
+    max-width: 100%;
+  }
+}
+
+/* Onder 1100px gewoon stapelen en 100% breed */
+@media (max-width: 1099.98px){
+  .main-container{ flex-wrap: wrap; }
+  .content-wrapper,
+  .activiteiten-section{ flex-basis: 100%; }
+}

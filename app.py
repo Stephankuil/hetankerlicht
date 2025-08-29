@@ -6,10 +6,12 @@ from dotenv import load_dotenv
 from werkzeug.utils import secure_filename
 from datetime import date
 import re
-
+from flask import g
 from datetime import datetime
 from flask_wtf.csrf import CSRFProtect, generate_csrf
 from datetime import datetime
+from pathlib import Path
+from flask import render_template, send_from_directory
 
 load_dotenv()
 
@@ -33,7 +35,11 @@ print(f"Wachtwoord uit .env: {PASSWORD}")
 UPLOAD_FOLDER_IMAGES = os.path.join(os.getcwd(), 'static', 'uploads')
 UPLOAD_FOLDER_PDFS = os.path.join(os.getcwd(), 'static', 'pdfs')
 
-
+app.config["UPLOAD_FOLDER_PDFS"] = os.getenv(
+    "UPLOAD_FOLDER_PDFS",
+    os.path.join(app.root_path, "static", "pdfs")
+)
+os.makedirs(app.config["UPLOAD_FOLDER_PDFS"], exist_ok=True)
 
 UPLOAD_FOLDER_NIEUWTJES = os.path.join(os.getcwd(), 'static', 'uploads', 'nieuwtjes')
 os.makedirs(UPLOAD_FOLDER_NIEUWTJES, exist_ok=True)
@@ -110,12 +116,56 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-# Homepagina - publiek toegankelijk
-@app.route('/')
-def home():
-    print("Flask app is gestart met home route actief")
 
-    return render_template('home.html')
+
+# Homepagina - publiek toegankelijk
+import sqlite3
+from flask import Flask, render_template, session, g, request
+
+app = Flask(__name__)
+app.config["SECRET_KEY"] = "zet-hier-een-lange-willekeurige-waarde"
+
+def get_db():
+    conn = sqlite3.connect("ankerlicht.db")
+    conn.row_factory = sqlite3.Row
+    return conn
+
+@app.before_request
+def tel_bezoek_eenmaal_per_sessie():
+    # sla static requests over (css/js/afbeeldingen/favicon)
+    if request.endpoint in ("static",) or request.path.startswith("/static") or request.path == "/favicon.ico":
+        return
+
+    # tel alleen eerste keer in deze sessie
+    if not session.get("bezoek_al_geteld"):
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute("UPDATE bezoekers SET aantal = aantal + 1 WHERE id = 1")
+        conn.commit()
+        conn.close()
+        session["bezoek_al_geteld"] = True
+
+    # haal actuele stand voor templates
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute("SELECT aantal FROM bezoekers WHERE id = 1")
+    g.bezoekers_aantal = cur.fetchone()["aantal"]
+    conn.close()
+
+@app.context_processor
+def inject_bezoekers():
+    # beschikbaar als {{ aantal }} in ALLE templates
+    return {"aantal": getattr(g, "bezoekers_aantal", 0)}
+
+@app.route("/")
+def home():
+    # NIET nog eens verhogen hier
+    return render_template("home.html")
+
+@app.route('/bestuur')
+def bestuur():
+    return render_template('bestuur.html')
+
 
 # Portfolio / Over Het Ankerlicht
 @app.route('/over')
@@ -420,37 +470,38 @@ def krantje():
 def upload_pdf():
     if not session.get("logged_in"):
         flash("Log eerst in om PDF's te uploaden.")
-        return redirect(url_for("login"))  # Zorg dat je een login-route hebt
+        return redirect(url_for("login"))
 
     if request.method == "POST":
-        if "pdf_file" not in request.files:
+        file = request.files.get("pdf_file")
+        if not file or file.filename == "":
             flash("Geen bestand geselecteerd.")
             return redirect(request.url)
-        file = request.files["pdf_file"]
-        if file.filename == "":
-            flash("Bestandsnaam is leeg.")
-            return redirect(request.url)
-        if file and file.filename.lower().endswith(".pdf"):
-            filepath = os.path.join(app.config["UPLOAD_FOLDER_PDFS"], file.filename)
-            file.save(filepath)
-            flash("Upload geslaagd!")
-            return redirect(url_for("pdf_downloads"))
-        else:
+        if not file.filename.lower().endswith(".pdf"):
             flash("Alleen PDF-bestanden zijn toegestaan.")
             return redirect(request.url)
 
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(app.config["UPLOAD_FOLDER_PDFS"], filename)
+        file.save(filepath)
+        flash("Upload geslaagd!")
+        return redirect(url_for("pdf_downloads"))
+
     return render_template("upload_pdf.html")
+
+    return render_template("upload_pdf.html")
+
 
 @app.route("/pdf_downloads")
 def pdf_downloads():
-    folder = app.config["UPLOAD_FOLDER_PDFS"]
-    pdf_files = [
-        f for f in os.listdir(folder)
-        if f.lower().endswith(".pdf")
-    ]
+    folder = Path(app.config.get("UPLOAD_FOLDER_PDFS", Path(app.root_path) / "static" / "pdfs"))
+    folder.mkdir(parents=True, exist_ok=True)  # zekerheidje
+    pdf_files = sorted([p.name for p in folder.glob("*.pdf")])
     return render_template("pdf_downloads.html", pdfs=pdf_files)
 
-
+@app.route("/pdfs/<path:filename>")
+def serve_pdf(filename):
+    return send_from_directory(app.config["UPLOAD_FOLDER_PDFS"], filename, as_attachment=False)
 
 
 @app.route('/nieuwtjes')
