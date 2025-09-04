@@ -1,0 +1,38 @@
+/* pdf_download.css */
+
+.container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+ul {
+  list-style: none;         /* geen standaard bullets */
+  padding: 0;
+}
+
+ul li {
+  margin: 0.8rem 0;
+}
+
+ul li a {
+  display: inline-block;
+  background: #f5f7fa;       /* zachte achtergrond */
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #004080;            /* donkerblauwe tekst */
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: background 0.3s, transform 0.2s;
+}
+
+ul li a:hover {
+  background: #e2ecf9;       /* lichtere hoverkleur */
+  transform: translateY(-2px);
+}
+
+ul li {
+  color: #666;               /* stijl voor "Geen PDF's gevonden" */
+  font-style: italic;
+}

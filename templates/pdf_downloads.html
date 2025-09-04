@@ -4,8 +4,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div class="container">
-<h1>PDF downloads</h1>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pdf_download.css') }}">
 <ul>
   {% for f in pdfs %}
     <li><a href="{{ url_for('serve_pdf', filename=f) }}">{{ f }}</a></li>
@@ -13,6 +12,7 @@
     <li>Geen PDF's gevonden.</li>
   {% endfor %}
 </ul>
-  </div>
+
 {% endblock %}
+
 

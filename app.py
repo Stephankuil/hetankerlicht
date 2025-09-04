@@ -18,12 +18,16 @@ load_dotenv()
 from flask import Flask
 import os
 
-app = Flask(__name__, template_folder='templates')
+load_dotenv()  # Laad .env variabelen
 
+app = Flask(__name__, template_folder='templates')
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "defaultsecret")
 csrf = CSRFProtect(app)
 
+@app.context_processor
+def inject_csrf_token():
+    return dict(csrf_token=generate_csrf)
 # 🔐 Geheimen uit .env
-app.secret_key = os.getenv("ANKERLICHT_SECRET_KEY", "defaultsecret")
 
 USERNAME = os.getenv("ANKERLICHT_USERNAME")
 PASSWORD = os.getenv("ANKERLICHT_PASSWORD")
@@ -61,6 +65,7 @@ ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 ALLOWED_PDF_EXTENSIONS = {'pdf'}
 
 
+
 @app.after_request
 def set_all_security_headers(response):
     # Beveiliging tegen clickjacking
@@ -91,10 +96,6 @@ def set_all_security_headers(response):
     return response
 
 
-@app.context_processor
-def inject_csrf_token():
-    return dict(csrf_token=generate_csrf)
-
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_IMAGE_EXTENSIONS
@@ -122,8 +123,6 @@ def get_db_connection():
 import sqlite3
 from flask import Flask, render_template, session, g, request
 
-app = Flask(__name__)
-app.config["SECRET_KEY"] = "zet-hier-een-lange-willekeurige-waarde"
 
 def get_db():
     conn = sqlite3.connect("ankerlicht.db")
@@ -491,18 +490,34 @@ def upload_pdf():
 
     return render_template("upload_pdf.html")
 
+def _resolve_pdf_folder():
+    # Read from config or default to <app_root>/static/pdfs
+    cfg = app.config.get("UPLOAD_FOLDER_PDFS", Path(app.root_path) / "static" / "pdfs")
+    folder = Path(cfg)
+    # If it's a relative path in config, make it relative to app.root_path
+    if not folder.is_absolute():
+        folder = Path(app.root_path) / folder
+    return folder.resolve()
 
 @app.route("/pdf_downloads")
 def pdf_downloads():
-    folder = Path(app.config.get("UPLOAD_FOLDER_PDFS", Path(app.root_path) / "static" / "pdfs"))
-    folder.mkdir(parents=True, exist_ok=True)  # zekerheidje
-    pdf_files = sorted([p.name for p in folder.glob("*.pdf")])
-    return render_template("pdf_downloads.html", pdfs=pdf_files)
+    folder = _resolve_pdf_folder()
+    folder.mkdir(parents=True, exist_ok=True)
+
+    # DEBUG (optional): see where we look and what we find
+    print("PDF folder:", folder)
+    print("Exists:", folder.exists())
+
+    pdf_paths = [p for p in folder.iterdir() if p.is_file() and p.suffix.lower() == ".pdf"]
+    print("Found PDFs:", [p.name for p in pdf_paths])
+
+    latest_pdf = max(pdf_paths, key=lambda p: p.stat().st_mtime).name if pdf_paths else None
+    return render_template("pdf_downloads.html", pdfs=[latest_pdf] if latest_pdf else [])
 
 @app.route("/pdfs/<path:filename>")
 def serve_pdf(filename):
-    return send_from_directory(app.config["UPLOAD_FOLDER_PDFS"], filename, as_attachment=False)
-
+    folder = _resolve_pdf_folder()
+    return send_from_directory(folder, filename, as_attachment=False)
 
 @app.route('/nieuwtjes')
 def nieuwtjes():
